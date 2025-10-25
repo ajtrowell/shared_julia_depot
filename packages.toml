@@ -1,5 +1,4 @@
 [packages]
-JSON3 = "^1"
-TOML = "^1"
-DataStructures = "^0.18"
+JSON = "^1"
+#DocStringExtensions = "0.9"
 # Add more packages as needed
