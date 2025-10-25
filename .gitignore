@@ -1,3 +1,4 @@
 .codex_julia_depot/
 .julia/
 .juliaup/
+.agent_julia_depot/

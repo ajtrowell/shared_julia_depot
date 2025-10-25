@@ -24,6 +24,26 @@ Provision an existing project (e.g. `/path/to/project`) with the prepared depot 
 
 The script copies the depot into `/path/to/project/.julia`, creates `AGENTS.md` from the template if missing, and installs helper scripts under `/path/to/project/scripts/agent`.
 
+### Bind-mount the depot instead of copying
+
+To reuse a single shared depot across many sandboxes, set `BIND_MOUNT_DEPOT=/path/to/shared/depot` when running `provision_project.sh`. The script will bind mount that directory at `/path/to/project/.julia` instead of copying files.
+
+Key environment variables:
+- `BIND_MOUNT_DEPOT` (required): Absolute path to the shared depot to mount.
+- `BIND_MOUNT_PRIVATE` (optional): Set to `1` to run `mount --make-private` on the mount point.
+- `BIND_MOUNT_CMD` (optional): Override the mount executable (defaults to `mount`).
+
+Example (requires privileges to perform mounts):
+
+```bash
+sudo BIND_MOUNT_DEPOT=/opt/agent_julia_depot \
+     BIND_MOUNT_PRIVATE=1 \
+     ./agent_julia_sandbox/scripts/provision_project.sh /path/to/project
+```
+
+When you no longer need the sandbox, unmount the depot first: `sudo umount /path/to/project/.julia`.
+
+
 ## Run Julia or tests inside the project
 After provisioning, run the included helper scripts from your project directory:
 
