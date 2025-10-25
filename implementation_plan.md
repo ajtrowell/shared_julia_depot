@@ -4,6 +4,7 @@
 - Plan to ship a pre-populated `.juliaup` alongside the shared `.julia` depot so Juliaup can run offline when bind-mounted.
 - Update `scripts/depot/bootstrap_depot.sh` and `scripts/depot/update_depot.sh` to refresh both `.julia` and `.juliaup`, ensuring Julia binaries and metadata stay in sync.
 - Provide a `scripts/depot/run_shared_julia.sh` helper so users can launch Julia against the shared depot directly for cache warmups or manual exploration.
+- Introduce `scripts/lib/resolve_vendored_julia.py` so agent launchers can locate the vendored Julia binary without embedding inline Python.
 - Adjust `scripts/agent/run-julia.sh` and `scripts/agent/run-tests.sh` to bypass Juliaup entirely by invoking the vendored Julia binary under `./.julia/juliaup/.../bin/julia` while still configuring `JULIA_DEPOT_PATH` for package resolution.
 - Extend `scripts/new_setup/bind_shared_depot.sh` (and copy helper) to mount or copy `.juliaup` in parallel with `.julia`, and document the expectation in `AGENTS.md`.
 - Open question: confirm the bootstrap/update prewarm step fully populates Juliaup state so fresh sandboxes can stay offline until the next manual refresh.
