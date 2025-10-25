@@ -20,3 +20,14 @@ sync_juliaup_payload() {
 }
 
 sync_juliaup_payload
+
+prewarm_juliaup_cache() {
+  echo "Prewarming Julia toolchain metadata via Juliaup..."
+  if output="$("$THIS_DIR/run_shared_julia.sh" --version 2>&1)"; then
+    echo "$output"
+  else
+    echo "Warning: Juliaup prewarm failed: $output" >&2
+  fi
+}
+
+prewarm_juliaup_cache
