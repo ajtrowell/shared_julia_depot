@@ -20,12 +20,17 @@ fi
 
 mkdir -p "$TARGET_DIR/.julia"
 copy_dir "$SHARED_DEPOT/" "$TARGET_DIR/.julia/"
+set_owner_to_invoker "$TARGET_DIR/.julia"
 
 mkdir -p "$TARGET_DIR/.juliaup"
 copy_dir "$SHARED_JULIAUP/" "$TARGET_DIR/.juliaup/"
+set_owner_to_invoker "$TARGET_DIR/.juliaup"
 
 if [[ ! -f "$TARGET_DIR/AGENTS.md" ]]; then
   cp "$ROOT_DIR/AGENTS_TEMPLATE.md" "$TARGET_DIR/AGENTS.md"
+fi
+if [[ -f "$TARGET_DIR/AGENTS.md" ]]; then
+  set_owner_to_invoker "$TARGET_DIR/AGENTS.md"
 fi
 
 "$THIS_DIR/copy_agent_scripts.sh" "$TARGET_DIR"

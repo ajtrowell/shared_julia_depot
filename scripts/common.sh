@@ -26,3 +26,31 @@ copy_dir() {
     (cd "$src" && tar cf - .) | (cd "$dst" && tar xpf -)
   fi
 }
+
+set_owner_to_invoker() {
+  local target="$1"
+  [[ -e "$target" ]] || return 0
+  if [[ "$(id -u)" -ne 0 ]]; then
+    return 0
+  fi
+  local uid="${SUDO_UID:-}"
+  local gid="${SUDO_GID:-}"
+  if [[ -z "$uid" ]]; then
+    uid="$(stat -c '%u' "$target" 2>/dev/null || true)"
+  fi
+  if [[ -z "$gid" ]]; then
+    if [[ -n "${SUDO_USER:-}" ]]; then
+      gid="$(id -g "$SUDO_USER" 2>/dev/null || true)"
+    fi
+  fi
+  if [[ -z "$gid" ]]; then
+    gid="$(stat -c '%g' "$target" 2>/dev/null || true)"
+  fi
+  if [[ -n "$uid" ]]; then
+    if [[ -n "$gid" ]]; then
+      chown -R "$uid:$gid" "$target"
+    else
+      chown -R "$uid" "$target"
+    fi
+  fi
+}
