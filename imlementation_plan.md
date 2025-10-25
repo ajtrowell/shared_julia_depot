@@ -1,0 +1,8 @@
+- Reorganize shell tooling into purpose-specific directories so agent automation lives under `scripts/agent/`, shared Julia depot provisioning under `scripts/depot/`, and project bootstrapping helpers under `scripts/new_setup/`.
+- Provide two scripts in `scripts/new_setup/`: `copy_shared_depot.sh` to copy the shared `.julia` depot into the current project directory, and `bind_shared_depot.sh` to create an empty `.julia` then bind-mount it to the shared depot path resolved relative to the script location.
+- Note that `scripts/depot/bootstrap_depot.sh` executes Julia with `--project=@stdlib`, reusing the built-in standard library environment so the bootstrap process runs without depending on any user-level packages.
+- Plan to ship a pre-populated `.juliaup` alongside the shared `.julia` depot so Juliaup can run offline when bind-mounted.
+- Update `scripts/depot/bootstrap_depot.sh` and `scripts/depot/update_depot.sh` to refresh both `.julia` and `.juliaup`, ensuring Julia binaries and metadata stay in sync.
+- Adjust `scripts/agent/run-julia.sh` and `scripts/agent/run-tests.sh` to point Juliaup at the project-local `.juliaup` (e.g., by exporting `JULIAUP_DEPOT_PATH` or overriding `HOME`) so launchers avoid the read-only home directory.
+- Extend `scripts/new_setup/bind_shared_depot.sh` (and copy helper) to mount or copy `.juliaup` in parallel with `.julia`, and document the expectation in `AGENTS.md`.
+- Open question: confirm Juliaup will skip its startup self-update when offline; if not, cache or vendor the necessary version DB files so the launcher trusts the mounted depot without network access.
