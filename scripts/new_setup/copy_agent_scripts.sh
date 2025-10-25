@@ -5,7 +5,7 @@ ROOT_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 
 TARGET_DIR="${1:-$PWD}"
 mkdir -p "$TARGET_DIR/scripts/agent"
-cp "$SCRIPT_DIR/agent_run_julia.sh" "$TARGET_DIR/scripts/agent/run_julia.sh"
-cp "$SCRIPT_DIR/agent_run_tests.sh" "$TARGET_DIR/scripts/agent/run_tests.sh"
+cp "$ROOT_DIR/agent/run-julia.sh" "$TARGET_DIR/scripts/agent/run-julia.sh"
+cp "$ROOT_DIR/agent/run-tests.sh" "$TARGET_DIR/scripts/agent/run-tests.sh"
 chmod +x "$TARGET_DIR/scripts/agent"/*.sh
 echo "Copied agent scripts to $TARGET_DIR/scripts/agent"
