@@ -7,3 +7,9 @@
 - Adjust `scripts/agent/run-julia.sh` and `scripts/agent/run-tests.sh` to point Juliaup at the project-local `.juliaup` (e.g., by exporting `JULIAUP_DEPOT_PATH` or overriding `HOME`) so launchers avoid the read-only home directory.
 - Extend `scripts/new_setup/bind_shared_depot.sh` (and copy helper) to mount or copy `.juliaup` in parallel with `.julia`, and document the expectation in `AGENTS.md`.
 - Open question: confirm Juliaup will skip its startup self-update when offline; if not, cache or vendor the necessary version DB files so the launcher trusts the mounted depot without network access.
+
+Current Findings
+----------------
+- Agents launch via `scripts/agent/run-julia.sh` still invoke Juliaup’s `julialauncher`. If the cached channel DB/toolchain are incomplete, the launcher attempts a network refresh and fails in sandboxed environments. Once a manual run with network finishes the setup, subsequent offline runs succeed.
+- The shared depot bootstrap currently mirrors host `.juliaup` metadata/files, but we have not validated that those copies alone satisfy Juliaup’s startup checks. Running `scripts/depot/run_shared_julia.sh` during bootstrap may prewarm caches; need to verify if that suffices for fresh sandboxes.
+- Potential mitigation: resolve the vendored Julia binary directly (bypassing Juliaup entirely) after verifying the mirrored toolchain exists. Requires further discussion before implementation.
