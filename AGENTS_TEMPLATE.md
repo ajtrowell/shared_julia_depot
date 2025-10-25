@@ -4,7 +4,7 @@ This repo is provisioned to vendor a local Julia depot per project.
 
 ## Running Julia from an agent
 
-Use `scripts/agent/run-julia.sh` as the entrypoint instead of calling `julia` directly. It sets `JULIA_DEPOT_PATH=./.julia` and `--project=.` automatically.
+Use `scripts/agent/run-julia.sh` as the entrypoint instead of calling `julia` directly. It sets `JULIA_DEPOT_PATH=./.julia`, `JULIAUP_DEPOT_PATH=./.juliaup`, `JULIAUP_HOME=./.juliaup`, and `--project=.` automatically.
 
 Examples:
 
