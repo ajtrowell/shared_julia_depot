@@ -65,3 +65,12 @@ To refresh the precompiled depot after editing `packages.toml`, rerun:
 ```
 
 This reuses the bootstrap logic to add or update packages in `.agent_julia_depot` and sync the Juliaup metadata/toolchains into `.agent_juliaup_depot`.
+
+## Explore the shared depot locally
+To poke around the sandboxed depot without provisioning a project, launch Julia through the shared assets:
+
+```bash
+./agent_julia_sandbox/scripts/depot/run_shared_julia.sh
+```
+
+The helper sets `JULIA_DEPOT_PATH=.agent_julia_depot` and `JULIAUP_DEPOT_PATH=.agent_juliaup_depot`, so any packages or Juliaup operations you perform will update the cached depot that agents consume.

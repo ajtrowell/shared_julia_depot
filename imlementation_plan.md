@@ -3,6 +3,7 @@
 - Note that `scripts/depot/bootstrap_depot.sh` executes Julia with `--project=@stdlib`, reusing the built-in standard library environment so the bootstrap process runs without depending on any user-level packages.
 - Plan to ship a pre-populated `.juliaup` alongside the shared `.julia` depot so Juliaup can run offline when bind-mounted.
 - Update `scripts/depot/bootstrap_depot.sh` and `scripts/depot/update_depot.sh` to refresh both `.julia` and `.juliaup`, ensuring Julia binaries and metadata stay in sync.
+- Provide a `scripts/depot/run_shared_julia.sh` helper so users can launch Julia against the shared depot directly for cache warmups or manual exploration.
 - Adjust `scripts/agent/run-julia.sh` and `scripts/agent/run-tests.sh` to point Juliaup at the project-local `.juliaup` (e.g., by exporting `JULIAUP_DEPOT_PATH` or overriding `HOME`) so launchers avoid the read-only home directory.
 - Extend `scripts/new_setup/bind_shared_depot.sh` (and copy helper) to mount or copy `.juliaup` in parallel with `.julia`, and document the expectation in `AGENTS.md`.
 - Open question: confirm Juliaup will skip its startup self-update when offline; if not, cache or vendor the necessary version DB files so the launcher trusts the mounted depot without network access.
