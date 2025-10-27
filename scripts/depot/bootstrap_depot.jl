@@ -67,5 +67,13 @@ function try_parse_version_spec(ver::AbstractString)
     end
 end
 
-packages_toml = get(ENV, "PACKAGES_FILE", joinpath(pwd(), "packages.toml"))
-bootstrap_depot(packages_toml)
+default_packages_file() = normpath(joinpath(@__DIR__, "..", "..", "packages.toml"))
+
+function resolve_packages_file()
+    if haskey(ENV, "PACKAGES_FILE")
+        return abspath(ENV["PACKAGES_FILE"])
+    end
+    return default_packages_file()
+end
+
+bootstrap_depot(resolve_packages_file())

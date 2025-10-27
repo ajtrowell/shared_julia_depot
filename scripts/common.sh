@@ -16,6 +16,16 @@ UNAME="$(uname -s)"
 is_macos() { [[ "$UNAME" == "Darwin" ]]; }
 is_linux() { [[ "$UNAME" == "Linux" ]]; }
 
+export COMMON_DIR
+export SCRIPTS_ROOT
+export ROOT_DIR
+export DEPOT_DIR
+export JULIAUP_DEPOT_DIR
+export HOST_JULIAUP_DIR
+export HOST_JULIAUP_TOOLCHAINS_DIR
+export JULIA_BIN
+export PACKAGES_FILE
+
 export JULIA_DEPOT_PATH="$DEPOT_DIR"
 mkdir -p "$DEPOT_DIR"
 mkdir -p "$JULIAUP_DEPOT_DIR"
