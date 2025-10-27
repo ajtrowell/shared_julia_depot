@@ -1,4 +1,8 @@
 [packages]
-JSON = "^1"
-#DocStringExtensions = "0.9"
+JSON = "1.2"
+DocStringExtensions = "0.9"
+JuliaFormatter = "^2"
+Plots = "1.41"
+Revise = "3.11"
+StaticArrays = "1.9"
 # Add more packages as needed
