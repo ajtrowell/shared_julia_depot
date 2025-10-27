@@ -11,11 +11,51 @@ HOST_JULIAUP_TOOLCHAINS_DIR="${HOST_JULIAUP_TOOLCHAINS_DIR:-"$HOME/.julia/juliau
 JULIA_BIN="${JULIA_BIN:-julia}"
 PACKAGES_FILE="${PACKAGES_FILE:-"$ROOT_DIR/packages.toml"}"
 
+UNAME="$(uname -s)"
+
+is_macos() { [[ "$UNAME" == "Darwin" ]]; }
+is_linux() { [[ "$UNAME" == "Linux" ]]; }
+
 export JULIA_DEPOT_PATH="$DEPOT_DIR"
 mkdir -p "$DEPOT_DIR"
 mkdir -p "$JULIAUP_DEPOT_DIR"
 
 have_cmd() { command -v "$1" >/dev/null 2>&1; }
+
+stat_field() {
+  local fmt_linux="$1" fmt_macos="$2" target="$3"
+  local result=""
+  if is_macos; then
+    result="$(stat -f "$fmt_macos" "$target" 2>/dev/null || true)"
+  else
+    result="$(stat -c "$fmt_linux" "$target" 2>/dev/null || true)"
+  fi
+  printf '%s' "$result"
+}
+
+stat_uid() { stat_field '%u' '%u' "$1"; }
+stat_gid() { stat_field '%g' '%g' "$1"; }
+stat_dev() { stat_field '%d' '%d' "$1"; }
+
+is_mountpoint() {
+  local candidate="${1:-}"
+  if [[ -z "$candidate" ]]; then
+    return 1
+  fi
+  if [[ ! -e "$candidate" ]]; then
+    return 1
+  fi
+  if is_linux && have_cmd mountpoint; then
+    mountpoint -q "$candidate"
+    return $?
+  fi
+  local abs_path parent_path path_dev parent_dev
+  abs_path="$(cd -- "$candidate" && pwd)"
+  parent_path="$(cd -- "$(dirname "$abs_path")" && pwd)"
+  path_dev="$(stat_dev "$abs_path")"
+  parent_dev="$(stat_dev "$parent_path")"
+  [[ -n "$path_dev" && -n "$parent_dev" && "$path_dev" != "$parent_dev" ]]
+}
 
 copy_dir() {
   local src="$1" dst="$2"
@@ -36,7 +76,7 @@ set_owner_to_invoker() {
   local uid="${SUDO_UID:-}"
   local gid="${SUDO_GID:-}"
   if [[ -z "$uid" ]]; then
-    uid="$(stat -c '%u' "$target" 2>/dev/null || true)"
+    uid="$(stat_uid "$target")"
   fi
   if [[ -z "$gid" ]]; then
     if [[ -n "${SUDO_USER:-}" ]]; then
@@ -44,7 +84,7 @@ set_owner_to_invoker() {
     fi
   fi
   if [[ -z "$gid" ]]; then
-    gid="$(stat -c '%g' "$target" 2>/dev/null || true)"
+    gid="$(stat_gid "$target")"
   fi
   if [[ -n "$uid" ]]; then
     if [[ -n "$gid" ]]; then
