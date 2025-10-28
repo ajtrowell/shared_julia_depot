@@ -73,4 +73,6 @@ fi
 
 "$THIS_DIR/copy_agent_scripts.sh" "$TARGET_DIR"
 
+ensure_gitignore_entries "$TARGET_DIR" ".julia" ".juliaup"
+
 echo "Bind-mounted $TARGET_DIR/.julia to $SHARED_DEPOT and $TARGET_DIR/.juliaup to $SHARED_JULIAUP, then installed agent scaffolding."

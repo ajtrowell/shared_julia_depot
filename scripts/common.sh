@@ -104,3 +104,19 @@ set_owner_to_invoker() {
     fi
   fi
 }
+
+ensure_gitignore_entries() {
+  local root_dir="$1"
+  shift || true
+  local gitignore="$root_dir/.gitignore"
+  if [[ ! -f "$gitignore" ]]; then
+    touch "$gitignore"
+  fi
+  local entry
+  for entry in "$@"; do
+    if [[ -n "$entry" ]] && ! grep -Fxq "$entry" "$gitignore" 2>/dev/null; then
+      printf '%s\n' "$entry" >>"$gitignore"
+    fi
+  done
+  set_owner_to_invoker "$gitignore"
+}

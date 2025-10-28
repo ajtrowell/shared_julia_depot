@@ -35,4 +35,6 @@ fi
 
 "$THIS_DIR/copy_agent_scripts.sh" "$TARGET_DIR"
 
+ensure_gitignore_entries "$TARGET_DIR" ".julia" ".juliaup"
+
 echo "Copied shared depot into $TARGET_DIR/.julia and Juliaup metadata into $TARGET_DIR/.juliaup, then installed agent scaffolding."
